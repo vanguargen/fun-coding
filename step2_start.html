@@ -1,0 +1,122 @@
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8" />
+        <title>Brian's Awesome Game</title>
+        <style>
+          * {
+            padding: 0;
+            margin: 0;
+          }
+          canvas {
+            background: #eee;
+            display: block;
+            margin: 0 auto;
+          }
+        </style>
+    </head>
+    <body>
+        <canvas id="myCanvas" width="480" height="320"></canvas>
+        <button id="runButton">Start Game</button>
+        <script>
+            // Prepare
+            const canvas = document.getElementById("myCanvas");
+            const ctx = canvas.getContext("2d");
+
+            // Game state
+            let x = canvas.width / 2;
+            let y = canvas.height - 30;
+            let dx = 2;
+            let dy = -2;
+            const ballRadius = 10;
+            const paddleHeight = 10;
+            const paddleWidth = 75;
+            let paddleX = (canvas.width - paddleWidth) / 2;
+            let paddleY = 280;
+            // TODO: add state to handle paddle movement
+
+
+            // Functions
+            function keyDownHandler(e) {
+                if (e.key == "a") { 
+                    // TODO: what should happen when right arrow is pressed?
+                    paddleX = paddleX-8
+                    if (0>= paddleX){
+                        paddleX = 0
+                    }
+                }
+                if (e.key == "d") { 
+                    // TODO: what should happen when right arrow is pressed?
+                    paddleX = paddleX+8
+                    if (paddleX >=410){
+                        paddleX = 410
+                    }
+                }
+            }
+
+            function keyUpHandler(e) {
+                if (e.key === "ArrowRight") {
+                    // TODO: what should happen when right arrow is no longer pressed? 
+                }
+                // TODO: handle when left arrow is no longer pressed
+            }
+
+            function drawPaddle() {
+                ctx.beginPath();
+                ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            function drawBall() {
+                ctx.beginPath();
+                ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+                ctx.fillStyle = "#005DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+
+
+            // Main Drawing
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawBall();
+                drawPaddle();
+    
+                // Wall Collision logic
+                if (y + dy < ballRadius) { // top
+                    dy = -dy;
+                }
+                else if (y + dy > canvas.height - ballRadius) { // bottom
+                    dy = -dy;
+                }
+                if (x + dx < ballRadius) { // left
+                    dx = -dx;
+                }
+                else if (x + dx + ballRadius > canvas.width) { // right
+                    dx = -dx;
+                }
+
+                // TODO: How should we move the paddle based on user action? 
+                paddleX = paddleX + 0;
+
+                // Ball movement
+                x += dx;
+                y += dy;
+            }
+            
+            function startGame() {
+                setInterval(draw, 10); // every 10 milliseconds
+            }
+            
+            document.getElementById("runButton").addEventListener("click",
+                function() {
+                    startGame();
+                    this.disabled = true;
+                }
+            )
+            document.addEventListener("keydown", keyDownHandler, false);
+            document.addEventListener("keyup", keyUpHandler, false);
+        </script>
+    </body>
+</html>
